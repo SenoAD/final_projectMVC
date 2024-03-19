@@ -12,7 +12,8 @@
             public string Description { get; set; }
             public int DestinationLocationID { get; set; }
             public DateTime CreatedDate { get; set; }
-            public List<PlanItem> PlanItems { get; set; }
+            public IEnumerable<PlanItem> PlanItems { get; set; }
+            public int IsPublic { get; set; }
         }
 
     }

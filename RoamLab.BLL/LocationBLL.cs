@@ -34,5 +34,19 @@ namespace RoamLab.BLL
             }
             return listLocationDto;
         }
+
+        public void Insert(LocationDTO locationDTO)
+        {
+            var location = new Location 
+            {
+                LocationID = locationDTO.LocationID,
+                City = locationDTO.City,
+                Country = locationDTO.Country,
+                Region = locationDTO.Region,
+                Latitude = locationDTO.Latitude,
+                Longitude = locationDTO.Longitude,
+            };
+            _locationDAL.Insert(location);
+        }
     }
 }

@@ -12,5 +12,6 @@ namespace RoamLab.BLL.DTO
         public string Description { get; set; }
         public int DestinationLocationID { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int IsPublic { get; set; }
     }
 }

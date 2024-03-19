@@ -10,5 +10,6 @@ namespace RoamLab.BLL.Interface
     {
         void Insert(InsertVacationPlanDTO Plan);
         IEnumerable<VacationPlanDTO> GetVacationPlanByUserID(int userID);
+        GetEditVacationPlanDTO GetVacationPlanAndPlanItemByPlanID(int planID);
     }
 }

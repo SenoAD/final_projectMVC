@@ -10,6 +10,7 @@ namespace RoamLab.BO
         public int PlanID { get; set; }
         public int PlaceID { get; set; }
         public string DatePlace { get; set; }
+        public Place PlacebyID { get; set; }
     }
 
 }

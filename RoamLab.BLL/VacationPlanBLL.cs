@@ -17,6 +17,39 @@ namespace RoamLab.BLL
             vacationPlanDAL = new VacationPlanDAL();
         }
 
+        public GetEditVacationPlanDTO GetVacationPlanAndPlanItemByPlanID(int planID)
+        {
+            var VacationPlan = vacationPlanDAL.GetVacationPlanAndPlanItemByPlanID(planID);
+            
+
+            var ItemsPlanDto = new List<EditPlanItemDTO>();
+            foreach (var item in VacationPlan.PlanItems)
+            {
+                var ItemPlanDto = new EditPlanItemDTO();
+                ItemPlanDto.PlanID = item.PlanID;
+                ItemPlanDto.PlaceID = item.PlaceID;
+                ItemPlanDto.DatePlace = item.DatePlace;
+
+                var PlaceDto = new PlaceDTO 
+                {
+                    Name = item.PlacebyID.Name,
+                    Address = item.PlacebyID.Address,   
+                    PhoneNumber = item.PlacebyID.PhoneNumber,
+                };
+                ItemPlanDto.PlacebyID = PlaceDto;
+                ItemsPlanDto.Add(ItemPlanDto);
+            }
+            var EditVacationPlanDTO = new GetEditVacationPlanDTO
+            {
+                PlanID = VacationPlan.PlanID,
+                Description = VacationPlan.Description,
+                Name = VacationPlan.Name,
+                IsPublic = VacationPlan.IsPublic,
+                PlanItems = ItemsPlanDto
+            };
+            return EditVacationPlanDTO;
+        }
+
         public IEnumerable<VacationPlanDTO> GetVacationPlanByUserID(int userID)
         {
             List<VacationPlanDTO> vacationPlanDto = new List<VacationPlanDTO>();
@@ -29,8 +62,8 @@ namespace RoamLab.BLL
                     Name = plan.Name,
                     UserID  = plan.UserID,
                     Description = plan.Description,
-                    DestinationLocationID = plan.DestinationLocationID,
-                    CreatedDate = plan.CreatedDate
+                    CreatedDate = plan.CreatedDate,
+                    IsPublic = plan.IsPublic,
                 });
             }
             return vacationPlanDto;
@@ -52,7 +85,6 @@ namespace RoamLab.BLL
                 UserID = Plan.UserID,
                 Name = Plan.Name,
                 Description = Plan.Description,
-                DestinationLocationID = Plan.DestinationLocationID,
                 PlanItems = newPlanList
             };
             vacationPlanDAL.TransactionInsert(newVacationPlan);

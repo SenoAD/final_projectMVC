@@ -13,5 +13,6 @@ namespace RoamLab.BLL.DTO
         public int LocationID { get; set; }
         public int CategoryID { get; set; }
         public string Preview { get; set; }
+        public LocationDTO Location { get; set; }
     }
 }

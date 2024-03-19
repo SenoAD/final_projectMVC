@@ -1,0 +1,89 @@
+﻿@model RoamLab.BLL.DTO.GetEditVacationPlanDTO
+
+@{
+    ViewData["Title"] = "EditVacationPlan";
+}
+
+<h1>EditVacationPlan</h1>
+
+<h4>GetEditVacationPlanDTO</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="EditVacationPlan">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsPublic" class="control-label">Is Public:</label><br />
+                <input type="radio" asp-for="IsPublic" value="true" /> Yes
+                <input type="radio" asp-for="IsPublic" value="false" /> No
+                <span asp-validation-for="IsPublic" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                @* <input type="submit" value="Save" class="btn btn-primary" /> *@
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <!-- Table headers and footers -->
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Date</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Date</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </tfoot>
+                <!-- Table body -->
+                <tbody>
+                    <!-- Table rows -->
+                    @{
+                        foreach (EditPlanItemDTO item in Model.PlanItems)
+                        {
+                            <tr>
+                                <form asp-controller="Vacations" asp-action="EditVacationPlan">
+                                    <!-- Displaying data -->
+                                <td> <input name="PlanID" value="@item.PlacebyID.Name" /></td>
+                                <td> <input name="PlanID" value="@item.PlacebyID.Address" /></td>
+                                <td> <input name="PlanID" value="@item.DatePlace" /></td>
+                                <td>
+                                    <input type="hidden" name="PlanID" value="@item.PlanID" />
+                                    
+                                </td>
+                                </form>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

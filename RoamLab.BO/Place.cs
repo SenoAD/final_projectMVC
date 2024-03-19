@@ -13,5 +13,8 @@ namespace RoamLab.BO
         public int LocationID { get; set; }
         public int CategoryID { get; set; }
         public string Preview { get; set; }
+        public Hotel Hotel { get; set; }
+        public Restaurant Restaurant { get; set; }
+        public Attraction Attraction { get; set; }
     }
 }

@@ -1,0 +1,160 @@
+﻿@using System.Text.Json
+@{
+    LoginUserDTO userDTO = ViewBag.UserDTO;
+    var cartSerialize = Context.Session.GetString("PlaceCart");
+    var cartItems = JsonSerializer.Deserialize<List<PlaceDTO>>(cartSerialize);
+
+    var planItemsSerialize = Context.Session.GetString("PlanItems");
+    var planItems = JsonSerializer.Deserialize<List<InsertPlanItemDTO>>(planItemsSerialize);
+}
+
+
+<h1>Create Vacation Plan</h1>
+
+<hr />
+<div class="container-fluid">
+
+    <form asp-controller="Vacations" asp-action="SaveVacationPlan" method="post">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" name="Name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" name="Description" rows="3" placeholder="Enter description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+
+   
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Vacation List</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="tblVacation" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Preview</th>
+                            <th>Name</th>
+                            <th>Destination Location</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Preview</th>
+                            <th>Name</th>
+                            <th>Destination Location</th>
+                            <th>Date</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        
+                          
+
+                            @foreach (PlaceDTO item in Model)
+                            {
+                           
+                                <tr>
+                                <td><img src="~/@item.Preview" width="60" /></td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Location.City</td>
+                                    <td>
+                                    <form asp-controller="Vacations" asp-action="AddToCart" method="post">
+                                        <input type="hidden" name="PlaceID" value="@item.PlaceID" />
+                                        <input type="date" name="DatePlace" />
+                                        <input type="submit" name="PlaceID" value="Add to Cart" />
+                                    </form>
+                                    
+                                </td>
+                            
+                                </tr>
+                            
+                            }
+                          
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @if (cartItems != null)
+    {
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">My Vacation Cart</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    <table class="table table-bordered" id="tblCart" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Preview</th>
+                                <th>Name</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < cartItems.Count || i < planItems.Count; i++)
+                            {
+                                <tr>
+                                    @if (i < cartItems.Count)
+                                    {
+                                        <td><img src="~/@cartItems[i].Preview" width="60" /></td>
+                                        <td>@cartItems[i].Name</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td> <!-- Empty cell if cartItems is shorter -->
+                                        <td></td>
+                                    }
+                                    @if (i < planItems.Count)
+                                    {
+                                        <td>@planItems[i].DatePlace</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td> <!-- Empty cell if planItems is shorter -->
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+
+@section scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Apply DataTables to the first table
+            $('#tblVacation').DataTable({
+               
+                "paging": true,
+                "pageLength": 5, // Set the number of rows per page
+                "lengthMenu": [5, 10, 20, 30]
+            });
+        });
+    </script>
+}

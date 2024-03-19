@@ -1,0 +1,84 @@
+﻿@model RoamLab.BLL.DTO.CreateAttractionPlaceDTO
+
+@{
+    ViewData["Title"] = "CreateAttractionPlace";
+
+    List<LocationDTO> locations = ViewBag.Locations;
+}
+
+<h1>Create Attraction Place</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateAttractionPlace">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LocationID" class="control-label">Location Name</label>
+                <select asp-for="LocationID" class="form-control">
+                    <option value="">-- Select Location --</option>
+                    @foreach (var location in locations)
+                    {
+                        <option value="@location.LocationID">@location.City</option>
+                    }
+                </select>
+                <span asp-validation-for="LocationID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="CategoryID" type="hidden" value="5" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <select asp-for="Type" class="form-control">
+                    <option value="">-- Select Attraction Type --</option>
+                    <option value="Museum">Museum</option>
+                    <option value="Park">Park</option>
+                    <option value="Zoo">Zoo</option>
+                    <option value="Beach">Beach</option>
+                    <option value="Historic Site">Historic Site</option>
+                    <option value="Mall">Mall</option>
+                    <option value="Amusement Park">Amusement Park</option>
+                    <option value="Swimming Pool">Swimming Pool</option>
+                    <option value="Gym">Gym</option>
+                    <!-- Add more options as needed -->
+                </select>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OpeningHours" class="control-label"></label>
+                <input asp-for="OpeningHours" class="form-control" placeholder="Ex: 07:00 - 18:00" />
+                <span asp-validation-for="OpeningHours" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AdmissionFee" class="control-label"></label>
+                <input asp-for="AdmissionFee" class="form-control" />
+                <span asp-validation-for="AdmissionFee" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

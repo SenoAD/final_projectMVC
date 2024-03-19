@@ -8,5 +8,6 @@ namespace RoamLab.BLL.Interface
     public interface ILocationBLL
     {
         IEnumerable<LocationDTO> GetAll();
+        void Insert(LocationDTO locationDTO);
     }
 }

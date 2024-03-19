@@ -10,5 +10,7 @@ namespace RoamLab.DAL.Interface
     {
         void TransactionInsert(VacationPlan T);
         IEnumerable<VacationPlan> GetVacationPlanByUserID(int userID);
+        VacationPlan GetVacationPlanAndPlanItemByPlanID(int planID);
+
     }
 }

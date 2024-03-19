@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoamLab.DAL", "RoamLab.DAL\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoamLab.BLL", "RoamLab.BLL\RoamLab.BLL.csproj", "{FFE5F115-670D-4EBC-998D-A0BE69507D52}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoamLab.MVC", "SampleMVC\RoamLab.MVC.csproj", "{EA4CAF28-4A19-4AA8-985C-69EBB95AB4A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{FFE5F115-670D-4EBC-998D-A0BE69507D52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFE5F115-670D-4EBC-998D-A0BE69507D52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFE5F115-670D-4EBC-998D-A0BE69507D52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA4CAF28-4A19-4AA8-985C-69EBB95AB4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA4CAF28-4A19-4AA8-985C-69EBB95AB4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA4CAF28-4A19-4AA8-985C-69EBB95AB4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA4CAF28-4A19-4AA8-985C-69EBB95AB4A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

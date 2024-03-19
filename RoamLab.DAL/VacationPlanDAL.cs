@@ -16,8 +16,9 @@ namespace RoamLab.DAL
     {
         private string GetConnectionString()
         {
+            return Helper.GetConnectionString();
             //return @"Data Source=ACTUAL;Initial Catalog=LatihanDb;Integrated Security=True;TrustServerCertificate=True";
-            return ConfigurationManager.ConnectionStrings["MyDbConnectionString"].ConnectionString;
+            //return ConfigurationManager.ConnectionStrings["MyDbConnectionString"].ConnectionString;
         }
         public void Delete(int id)
         {
@@ -44,8 +45,8 @@ namespace RoamLab.DAL
                     try
                     {
                         string vacationPlanQuery = @"
-                INSERT INTO VacationPlan (UserID, Name, Description, DestinationLocationID)
-                VALUES (@UserID, @Name, @Description, @DestinationLocationID);
+                INSERT INTO VacationPlan (UserID, Name, Description)
+                VALUES (@UserID, @Name, @Description);
                 SELECT CAST(SCOPE_IDENTITY() as int)"
                         ;
 
@@ -54,7 +55,7 @@ namespace RoamLab.DAL
                             UserID = Plan.UserID,
                             Name = Plan.Name,
                             Description = Plan.Description,
-                            DestinationLocationID = Plan.DestinationLocationID
+                            
                         };
 
                         int planId = conn.ExecuteScalar<int>(vacationPlanQuery, parameters, transaction);
@@ -106,6 +107,57 @@ namespace RoamLab.DAL
                 var param = new { UserID = userID };
                 var result = conn.Query<VacationPlan>(strSql, param);
                 return result;
+            }
+        }
+
+        public VacationPlan GetVacationPlanAndPlanItemByPlanID(int planID)
+        {
+            using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+            {
+                conn.Open();
+                using (var transaction = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        string vacationPlanQuery = @"select * from VacationPlan where PlanID = @PlanID";
+
+                        var parameters = new
+                        { PlanID = planID,};
+                        var result = conn.QuerySingleOrDefault<VacationPlan>(vacationPlanQuery, parameters,transaction);
+                        string planItemQuery = @"select * from PlanItem where PlanID = @PlanID";
+
+                        var param = new
+                            {PlanID = planID};
+
+                        var results = conn.Query<PlanItem>(planItemQuery, param, transaction);
+
+                        var placedal = new PlaceDAL();
+                        foreach(var item in results)
+                        {
+                         item.PlacebyID = placedal.GetPlaceByID(item.PlaceID);   
+                        }
+                        
+                        var VacationPlan = new VacationPlan 
+                        {
+                            PlanID = planID,
+                            Name = result.Name,
+                            Description = result.Description,
+                            CreatedDate = result.CreatedDate,
+                            IsPublic = result.IsPublic,
+                            UserID = result.UserID,
+                            PlanItems = results
+                        };
+
+                        transaction.Commit();
+                        conn.Close();
+                        return VacationPlan;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw; // Re-throwing the exception to maintain the original exception chain
+                    }
+                }
             }
         }
     }

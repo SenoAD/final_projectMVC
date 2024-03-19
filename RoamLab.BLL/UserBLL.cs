@@ -12,9 +12,11 @@ namespace RoamLab.BLL
     public class UserBLL : IUserBLL
     {
         private readonly IUser userDAL;
+        private readonly IRole roleUserDal;
         public UserBLL()
         {
             userDAL = new UserDAL();
+            roleUserDal = new RoleUserDAL();
         }
         public void Insert(UserCreateDTO entity)
         {
@@ -88,6 +90,18 @@ namespace RoamLab.BLL
                 {
                     throw new ArgumentException("Username or Password is wrong");
                 }
+                var result2 = roleUserDal.GetAllUserRolebyUserID(result.UserID);
+                var rolesUser = new List<RoleUserDTO>();
+
+                foreach (var item in result2)
+                {
+                    var roleTemp = new RoleUserDTO
+                    {
+                        RoleID = item.RoleID,
+                        UserID = item.UserID,
+                    };
+                    rolesUser.Add(roleTemp);
+                }
 
                 LoginUserDTO userDTO = new LoginUserDTO
                 {
@@ -97,7 +111,8 @@ namespace RoamLab.BLL
                     LastName = result.LastName,
                     Location = result.Location,
                     Email = result.Email,
-                    Password = result.Password
+                    Password = result.Password,
+                    RoleUsers = rolesUser
                 };
 
                 return userDTO;

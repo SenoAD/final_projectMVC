@@ -13,6 +13,7 @@ namespace RoamLab.BLL.DTO
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Location { get; set;}
+        public List<RoleUserDTO> RoleUsers { get; set; }
 
     }
 }

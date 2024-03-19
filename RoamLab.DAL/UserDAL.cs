@@ -13,8 +13,9 @@ namespace RoamLab.DAL
     {
         private string GetConnectionString()
         {
+            return Helper.GetConnectionString();
             //return @"Data Source=ACTUAL;Initial Catalog=LatihanDb;Integrated Security=True;TrustServerCertificate=True";
-            return ConfigurationManager.ConnectionStrings["MyDbConnectionString"].ConnectionString;
+            //return ConfigurationManager.ConnectionStrings["MyDbConnectionString"].ConnectionString;
         }
         public void Delete(int id)
         {
@@ -34,36 +35,47 @@ namespace RoamLab.DAL
         public void Insert(User entity)
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
-                try
+            {
+                conn.Open();
+                using (var transaction = conn.BeginTransaction())
                 {
-
-                    var strsql = @"INSERT INTO Users(Username,Password,Email,FirstName,LastName,Location) VALUES(@Username, @Password, @Email, @FirstName, @LastName, @Location)";
-                    var param = new
+                    try
                     {
-                        Username = entity.Username,
-                        Password = entity.Password,
-                        Email = entity.Email,
-                        FirstName = entity.FirstName,
-                        LastName = entity.LastName,
-                        Location = entity.Location
-                    };
 
+                        var strsql = @"INSERT INTO Users(Username,Password,Email,FirstName,LastName,Location) 
+                                 VALUES(@Username, @Password, @Email, @FirstName, @LastName, @Location);
+                                 SELECT CAST(SCOPE_IDENTITY() as int)";
+                        var param = new
+                        {
+                            Username = entity.Username,
+                            Password = entity.Password,
+                            Email = entity.Email,
+                            FirstName = entity.FirstName,
+                            LastName = entity.LastName,
+                            Location = entity.Location
+                        };
 
-                    int result = conn.Execute(strsql, param);
-                    if (result != 1)
-                    {
-                        throw new System.Exception("Data tidak berhasil ditambahkan");
+                        int userId = conn.ExecuteScalar<int>(strsql, param, transaction);
+                        //int result = conn.Execute(strsql, param);
+                        string strsql2 = @"INSERT INTO RoleUser (UserID)
+                                               VALUES (@UserID)";
+
+                        var param2 = new
+                        {
+                            UserID = userId
+                        };
+
+                        conn.Execute(strsql2, param2, transaction);
+                        transaction.Commit();
+                        conn.Close();
                     }
-
+                    catch 
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
-                catch (SqlException sqlEx)
-                {
-                    throw new ArgumentException($"{sqlEx.Number}");
-                }
-                catch (Exception ex)
-                {
-                    throw new ArgumentException("Kesalahan: " + ex.Message);
-                }
+            }
         }
 
         public User Login(string username, string password)
